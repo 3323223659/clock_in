@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.clock_in.mapper.ClockInLogMapper">
+    
+    <resultMap type="ClockInLogVO" id="ClockInLogResult">
+        <result property="id"    column="id"    />
+        <result property="sourceName"    column="source_name"    />
+        <result property="classTime"    column="class_time"    />
+        <result property="className"    column="class_name"    />
+        <result property="clockCount"    column="clock_count"    />
+        <result property="noClock"    column="no_clock"    />
+        <result property="belated"    column="belated"    />
+        <result property="leaved"    column="leaved"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectClockInLogVo">
+        select id, source_name, class_time, class_name, clock_count, no_clock, belated, leaved, create_time, update_time, is_delete from clock_in_log
+    </sql>
+
+    <select id="getAttendanceSummary" parameterType="ClockInLogVO" resultType="ClockInLogVO">
+        SELECT
+            a.id ,
+            co.course_name as sourceName,
+            c.class_name as className,
+            s.session_date AS classTime,  -- 课堂开始上课时间
+            COUNT(CASE WHEN a.is_present = 1 THEN 1 END) AS clockCount,  -- 打卡人数
+            COUNT(CASE WHEN a.is_present = 2 THEN 1 END) AS belated,         -- 迟到人数
+            COUNT(CASE WHEN a.is_present = 3 THEN 1 END) AS leaved,        -- 请假人数
+            COUNT(CASE WHEN a.is_present = 0 THEN 1 END) AS noClock,       -- 未打卡人数
+            s.create_time,
+            a.update_time
+        FROM
+            clock_in_attendance a
+        JOIN
+            clock_in_user u ON a.student_id = u.id
+        JOIN
+            clock_in_class c ON u.class_id = c.id
+        JOIN
+            clock_in_classroom_session s ON a.classroom_session_id = s.id
+        JOIN
+            clock_in_course co ON s.course_id = co.id
+        WHERE
+            a.is_delete = 0
+            AND u.is_delete = 0
+            AND c.is_delete = 0
+            AND s.is_delete = 0
+        <if test="sourceName != null and sourceName != ''">
+            AND co.course_name LIKE CONCAT('%', #{sourceName}, '%')
+        </if>
+        <if test="classTime != null">
+            AND s.start_time = #{classTime}
+        </if>
+        <if test="className != null and className != ''">
+            AND c.class_name LIKE CONCAT('%', #{className}, '%')
+        </if>
+        <if test="clockCount != null">
+            AND clockCount = #{clockCount}
+        </if>
+        <if test="noClock != null">
+            AND noClock = #{noClock}
+        </if>
+        <if test="belated != null">
+            AND belated = #{belated}
+        </if>
+        <if test="leaved != null">
+            AND leaved = #{leaved}
+        </if>
+        GROUP BY
+            a.id, co.course_name, c.class_name, s.start_time, a.create_time, a.update_time
+    </select>
+<!--    根据课堂id和学生id查询打卡记录（主要是更新同一个学生的-->
+    <select id="selectIsPresent">
+        select is_present from clock_in.clock_in_attendance
+        where classroom_session_id = #{classroomSessionId}
+        and student_id = #{studentId} and is_delete = 0
+    </select>
+<!--    更新同一个学生在同一个课堂的打卡记录-->
+    <update id="updateClockInAttendanceIsPresent" >
+        update clock_in_attendance
+        <set>
+            <if test="isPresent != null">is_present = #{isPresent}</if>
+        </set>
+        where student_id = #{studentId} and is_delete = 0 and classroom_session_id = #{sessionId}
+    </update>
+
+
+    <select id="selectClockInLogList" parameterType="ClockInLogVO" resultMap="ClockInLogResult">
+        <include refid="selectClockInLogVo"/>
+        <where>  
+            <if test="sourceName != null  and sourceName != ''"> and source_name like concat('%', #{sourceName}, '%')</if>
+            <if test="classTime != null "> and class_time = #{classTime}</if>
+            <if test="className != null  and className != ''"> and class_name like concat('%', #{className}, '%')</if>
+            <if test="clockCount != null "> and clock_count = #{clockCount}</if>
+            <if test="noClock != null "> and no_clock = #{noClock}</if>
+            <if test="belated != null "> and belated = #{belated}</if>
+            <if test="leaved != null "> and leaved = #{leaved}</if>
+        </where>
+    </select>
+    
+    <select id="selectClockInLogById" parameterType="Long" resultMap="ClockInLogResult">
+        <include refid="selectClockInLogVo"/>
+        where id = #{id}
+
+    </select>
+
+    <insert id="insertClockInAttendance" parameterType="ClockInAttendance" useGeneratedKeys="true" keyProperty="id">
+        insert into clock_in_attendance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classRoomSessionId != null">classroom_session_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="isPresent != null">is_present,</if>
+            <if test="ipAddress != null">ip_address,</if>
+            <if test="location != null">location,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classRoomSessionId != null">#{classroomSessionId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="isPresent != null">#{isPresent},</if>
+            <if test="ipAddress != null">#{ipAddress},</if>
+            <if test="location != null">#{location},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+
+
+    <insert id="insertClockInLog" parameterType="ClockInLogVO" useGeneratedKeys="true" keyProperty="id">
+        insert into clock_in_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sourceName != null">source_name,</if>
+            <if test="classTime != null">class_time,</if>
+            <if test="className != null">class_name,</if>
+            <if test="clockCount != null">clock_count,</if>
+            <if test="noClock != null">no_clock,</if>
+            <if test="belated != null">belated,</if>
+            <if test="leaved != null">leaved,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sourceName != null">#{sourceName},</if>
+            <if test="classTime != null">#{classTime},</if>
+            <if test="className != null">#{className},</if>
+            <if test="clockCount != null">#{clockCount},</if>
+            <if test="noClock != null">#{noClock},</if>
+            <if test="belated != null">#{belated},</if>
+            <if test="leaved != null">#{leaved},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClockInLog" parameterType="ClockInLogVO">
+        update clock_in_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sourceName != null">source_name = #{sourceName},</if>
+            <if test="classTime != null">class_time = #{classTime},</if>
+            <if test="className != null">class_name = #{className},</if>
+            <if test="clockCount != null">clock_count = #{clockCount},</if>
+            <if test="noClock != null">no_clock = #{noClock},</if>
+            <if test="belated != null">belated = #{belated},</if>
+            <if test="leaved != null">leaved = #{leaved},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+
+    </update>
+
+    <update id="deleteClockInLogById" parameterType="Long">
+        update clock_in_log set is_datelete = 1 where id = #{id}
+    </update>
+
+    <delete id="deleteClockInLogByIds" parameterType="String">
+        update clock_in_log set is_datelete = 1  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findAttendanceByClassroomSessionIdAndClassId" resultType="StudentAttendanceLogVO">
+        SELECT
+            u.id,
+            u.username,
+            u.name,
+            a.update_time AS clockInTime,
+            CASE
+                WHEN a.is_present IS NULL OR a.is_present = 0 THEN '未打卡'  -- 0 和 NULL 都为未打卡
+                WHEN a.is_present = 1 THEN '已打卡'
+                WHEN a.is_present = 2 THEN '迟到'
+                WHEN a.is_present = 3 THEN '请假'
+                ELSE '未知状态'
+                END AS status
+        FROM
+            clock_in_user u
+                LEFT JOIN clock_in_attendance a ON u.id = a.student_id AND a.classroom_session_id = #{classroomSessionId}
+        WHERE
+            u.class_id = #{classId}  -- 添加班级ID的条件
+          AND u.is_delete = 0
+          AND (a.is_delete = 0 OR a.is_delete IS NULL)
+        order by u.id asc
+
+    </select>
+</mapper>

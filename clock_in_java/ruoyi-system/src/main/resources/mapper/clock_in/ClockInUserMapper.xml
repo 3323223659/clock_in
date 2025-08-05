@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.clock_in.mapper.ClockInUserMapper">
+    
+    <resultMap type="ClockInUser" id="ClockInUserResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="classId"    column="class_id"    />
+        <result property="name"    column="name"    />
+        <result property="password"    column="password"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="className"    column="class_name"    />
+    </resultMap>
+
+    <sql id="selectClockInUserVo">
+        select id, username, name, password,class_id, create_time, update_time, is_delete from clock_in_user
+    </sql>
+    <select id="selectClockInUserAndClassList" parameterType="ClockInUser" >
+        SELECT
+        u.id,
+        u.username,
+        u.name,
+        u.create_time AS createTime,
+        u.update_time AS updateTime,
+        u.is_delete AS isDelete,
+        c.class_name AS className
+        FROM
+        clock_in_user AS u
+        LEFT JOIN
+        clock_in_class AS c ON u.class_id = c.id
+        <where>
+            <if test="username != null and username != ''">
+                AND u.username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND u.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="isDelete != null">
+                AND u.is_delete = #{isDelete}
+            </if>
+            AND u.is_delete = 0
+            AND c.is_delete = 0
+        </where>
+    </select>
+
+    <select id="selectUserId">
+        select id from clock_in_user where name = #{name} and is_delete = 0
+    </select>
+
+    <select id="selectClockInUserList" parameterType="ClockInUser" resultMap="ClockInUserResult">
+        <include refid="selectClockInUserVo"/>
+        <where>  
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectClockInUserById" parameterType="Long" resultMap="ClockInUserResult">
+        <include refid="selectClockInUserVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectClockInUserUserName"  resultMap="ClockInUserResult">
+        <include refid="selectClockInUserVo"/>
+        where username = #{username}
+    </select>
+    <select id="selectUserByClassId" >
+        select name from clock_in_user as u where u.class_id= #{classId} and is_delete = 0
+    </select>
+
+    <insert id="insertClockInUser" parameterType="ClockInUser" useGeneratedKeys="true" keyProperty="id">
+        insert into clock_in_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">username,</if>
+            <if test="name != null">name,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="password != null">password,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="name != null">#{name},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="password != null">#{password},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+         </trim>
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            <if test="name != null">name = VALUES(name),</if>
+            <if test="classId != null">class_id = VALUES(class_id),</if>
+            <if test="password != null">password = VALUES(password),</if>
+            <if test="updateTime != null">update_time = VALUES(update_time),</if>
+            <if test="isDelete != null">is_delete = VALUES(is_delete),</if>
+            <if test="createTime != null">create_time = VALUES(create_time),</if>
+        </trim>
+    </insert>
+
+    <update id="updateClockInUser" parameterType="ClockInUser">
+        update clock_in_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteClockInUserById" parameterType="Long">
+        update clock_in_user set is_delete =1 where id = #{id}
+    </update>
+
+    <update id="deleteClockInUserByIds" parameterType="String">
+        update clock_in_user set is_delete =1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

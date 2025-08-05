@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.clock_in.mapper.ClassLocationMapper">
+
+    <resultMap type="com.ruoyi.clock_in.domain.ClassLocation" id="ClassLocationResult">
+        <result property="id"    column="id"    />
+        <result property="locationName"    column="location_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <insert id="insertLocation" parameterType="com.ruoyi.clock_in.domain.ClassLocation" >
+        INSERT INTO clock_in_class_location (location_name, is_delete, create_time, update_time)
+        VALUES (#{locationName}, #{isDelete}, #{createTime}, #{updateTime})
+    </insert>
+
+    <select id="selectLocation" parameterType="com.ruoyi.clock_in.domain.ClassLocation" resultMap="ClassLocationResult">
+        SELECT * FROM clock_in_class_location WHERE location_name = #{name} AND is_delete = 0
+    </select>
+</mapper>

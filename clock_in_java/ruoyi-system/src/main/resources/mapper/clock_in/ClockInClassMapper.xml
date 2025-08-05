@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.clock_in.mapper.ClockInClassMapper">
+
+    <resultMap type="ClockInUser" id="ClockInUserResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="name"    column="name"    />
+        <result property="password"    column="password"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="className"    column="class_name"    />
+    </resultMap>
+    <select id="getClassIdByName" parameterType="string" resultType="Long">
+        select id from clock_in_class where class_name = #{className} and is_delete = 0
+    </select>
+    <select id="getClasName" resultType="java.lang.String">
+        select class_name from clock_in_class where id = #{classId} and is_delete = 0
+    </select>
+    <insert id="insertClassByName" parameterType="ClockInClass" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO clock_in_class (class_name, create_time, update_time)
+        VALUES (#{className}, NOW(), NOW())
+    </insert>
+
+    <select id="findClassroomsAndClassesByDateAndTime" resultType="map">
+        SELECT
+            c.course_name AS courseName,
+            cl.class_name AS className
+        FROM
+            clock_in_classroom_session cs
+                JOIN clock_in_course c ON cs.course_id = c.id
+                JOIN clock_in_class cl ON cs.class_id = cl.id
+        WHERE
+            cs.session_date = #{sessionDate} -- 指定的上课日期
+          AND TIME(#{time}) BETWEEN cs.start_time AND cs.end_time -- 检查指定时间是否在上课时间内
+          AND cs.is_delete = 0 -- 逻辑删除
+          AND c.is_delete = 0 -- 逻辑删除
+          AND cl.is_delete = 0 -- 逻辑删除
+    </select>
+
+</mapper>

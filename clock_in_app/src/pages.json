@@ -1,0 +1,31 @@
+{
+  "pages": [
+    {
+      "path": "pages/app/login/index",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/app/user/index",
+      "style": {
+        "navigationBarTitleText": "课程日历"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/app/index",
+        "text": "App"
+      }
+    ]
+  }
+}

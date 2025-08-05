@@ -1,0 +1,90 @@
+{
+	"h5": {
+		"devServer": {
+			"https": {
+				"cert": "-----BEGIN CERTIFICATE-----\nMIIDTTCCAjWgAwIBAgIGMTQxNTU0MA0GCSqGSIb3DQEBCwUAMF4xEDAOBgNVBAMT\nB1Rlc3QgQ0ExCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYD\nVQQHEw1TYW4gRnJhbmNpc2NvMRAwDgYDVQQKEwdUZXN0IENBMB4XDTI0MTAwNTE2\nMzcyNloXDTI1MTAwNTE2MzcyNlowFDESMBAGA1UEAxMJbG9jYWxob3N0MIIBIjAN\nBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsHDlHrDc04jHSG5dURQvLlCPeeUc\nAm6SR715cVoRVq/Ra1ORlBOQvh47ayffBBzyes473vhuS3yNR4v00NyfDiItuqWG\nFudd3gAakH4Ad0i6Sj01Kb6ghdg1dUgymH53elA/X3rl4ozK9GHd6yA4hzrgZG6p\nH5xNE51/xxZcXgzrsjCb4ge6avyxAkoKr3oWe4eNe/CgQ0Dr/TM+qDMIGvE7npRI\nxWq0WOFo7MokEKkIkerbKmiPeW7D1RBYKtw7tiXPvsJXOPw9Mykrslzr+eg87U0I\nZBgZEq1pFPDvVOrPZlr+REGDLzQfsNboqxDEjMlBSjuaNvHyk0MEpc1HywIDAQAB\no1swWTAMBgNVHRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIFoDAdBgNVHSUEFjAUBggr\nBgEFBQcDAQYIKwYBBQUHAwIwGgYDVR0RBBMwEYIJbG9jYWxob3N0hwR/AAABMA0G\nCSqGSIb3DQEBCwUAA4IBAQAEJpyGIxZRV8/FK3BDerXPzBLZn6wIj4sYsLu09DZ/\nudQu7f0+UaKlwkHQHznrIioNYmHhgWlwpiAtGWQzevBa+9x0A0ivPdKWP/Pmpt9W\nOBW0RaPG1FNLKtcF1eOMWVLHX5+zSujItnNrvi47y6PfUYFjdpph5h6GgJDdE125\nNGQO+Mklrgo1QK484wL1e4DdTN78Vm1OuRs30BaboGOOco+esB1O4UVPJwpHwgW4\nizVOk2hZuiZlstJSRxeoex16/Xbulk0iBVSXVBweaQeXJ2J4nEwxnAUWfKJYImoG\n7S0XMaHRVnXYYcJp536wyS+vjHkadOh2+VXbbkoKet/x\n-----END CERTIFICATE-----\n",
+				"key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAsHDlHrDc04jHSG5dURQvLlCPeeUcAm6SR715cVoRVq/Ra1OR\nlBOQvh47ayffBBzyes473vhuS3yNR4v00NyfDiItuqWGFudd3gAakH4Ad0i6Sj01\nKb6ghdg1dUgymH53elA/X3rl4ozK9GHd6yA4hzrgZG6pH5xNE51/xxZcXgzrsjCb\n4ge6avyxAkoKr3oWe4eNe/CgQ0Dr/TM+qDMIGvE7npRIxWq0WOFo7MokEKkIkerb\nKmiPeW7D1RBYKtw7tiXPvsJXOPw9Mykrslzr+eg87U0IZBgZEq1pFPDvVOrPZlr+\nREGDLzQfsNboqxDEjMlBSjuaNvHyk0MEpc1HywIDAQABAoIBADtMlhSsiGsnyyJS\nxVYcnIbKWI41LCa9Fri5u3kXNkCWMqIJoiHMOZdL/dhTvCZbvDr92S1k/VytbaYg\nKZWQsHxFjGzweJJ2DBwymLr7PhjY/pM44wc2pCiXs8/JBgguaOVY1xO18FEl1Igx\n5C3D1HvOk9/tOTYAh/8RrgIxR7XrvR7GK471x1bm2QBrQXkcbqb3rSqA0WYmT4Db\nwdRQYoh7NnYkGXNfCOeI3kW7RfLVP+Ca4kA+lSdhPSpj2Bz1g6QaFDR8Xbsi/Npf\nba7OPLdW1oRKb93832OP1FxRo2eAwOSdKgz4x1NdeQaU0MwR8Zn4ZnyRWkO0Mzw7\nH9bou6ECgYEA+OG3B4KhqZYrxk/I77ZYFBNBOKALbaeU9yRxUBhuad7zSq3b9E49\nxur/cKGeiTiuu50+2r9qTKfT57bU4/vOW0JZIKsA7wBMhrxWwKMqbsgP5SQvEmVL\nDpKqa/loYO4t9/5i6Datqk69omlwfzmUAJiaQZLa4fuwLbwmv+Ob3TMCgYEAtXzG\n6aV3tJYTMKyM8D5/b1F9lXqLWx0C/Z6tHo/totme+S04jjaAZeEol1qcR0CjH2WQ\ns6Ykh5oXNzKDfCu8BfOPCK5aYbH+uTbq3x7FwNfkIUMqso5O/T7FdZv2piULc8jI\n7+H7qDMXJ/Hn5SriBo1whZ7435i+cg8UsJfJewkCgYEAzBL4q3XX7WCvoDrHvpc7\n/aoULsQ82rsxEL2XFGAUGUexIqkQ1HBbg4Ip1kcP4eDSlhBH+8I8/YIX5cYrJo3R\nFU+AGaNebptGJKzGTcr8/j2ZmwBigKkCNH7asxKdHe3vT4wNue8r05whLs1aa1fh\nHeQDiIVMaUShn77J30pZAbUCgYAxVXzg0IkMvuryhUU+nU6Y3QcNViWBnA5PEQ4w\nS6Gmbg/H3mIMToZyq1UUZ54pxElTZJGENDqj3eBHseSKIX1YBNAx5OtOuUrr4CDS\njBPniwhJfm+h4AtazfBxOvc+TL2jOMZeZwi4vUKjKiAGbLTKYTJgMEmoxmWmrbDL\nHEe5uQKBgQCGciH/PwVIejgH5z8yJn6HSP2ZetJiYBWk6jcY6HGJtGLbprL/sIW6\nmNcwyRlkfPISee4uENPRd+UaMQCVr/x9qbX7eqU5ZXE6Ppc0skf92jX2DJW9EK5q\nRIIQt30Vk0snHx5iLRg8U3DBqmEwle8RtscrHHuSbz/WdlB3/LcFyQ==\n-----END RSA PRIVATE KEY-----\n"
+			},
+			"proxy": {}
+		},
+		"async": {
+			"delay": "10000"
+		},
+		"router": {
+			"base": "./"
+		}
+	},
+	"name": "",
+	"appid": "",
+	"description": "",
+	"versionName": "1.0.0",
+	"versionCode": "100",
+	"transformPx": false,
+	"app-plus": {
+		"usingComponents": true,
+		"splashscreen": {
+			"alwaysShowBeforeRender": true,
+			"waiting": true,
+			"autoclose": true,
+			"delay": 0
+		},
+		"modules": {
+
+		},
+		"distribute": { 
+			"android": { 
+				"permissions": ["<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+					"<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
+					"<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+					"<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+					"<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+					"<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.CAMERA\"/>",
+					"<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+					"<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+					"<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+					"<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+					"<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+					"<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+					"<uses-feature android:name=\"android.hardware.camera\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+					"<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+				]
+			},
+			"ios": {
+
+			},
+			"sdkConfigs": {
+
+			}
+		}
+	},
+	"quickapp": { 
+
+	},
+	"mp-weixin": { 
+		"appid": "",
+		"setting": {
+			"urlCheck": false
+		},
+		"usingComponents": true
+	},
+	"mp-alipay" : {
+        "usingComponents" : true
+    },
+    "mp-baidu" : {
+        "usingComponents" : true
+    },
+    "mp-toutiao" : {
+        "usingComponents" : true
+    },
+    "mp-qq" : {
+        "usingComponents" : true
+    }
+}

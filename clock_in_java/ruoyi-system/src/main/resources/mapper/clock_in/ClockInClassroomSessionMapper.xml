@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ruoyi.clock_in.mapper.ClockInClassroomSessionMapper">
+    <resultMap type="ClockInUser" id="ClockInUserResult">
+        <result property="id" column="id"/>
+        <result property="sessionDate" column="session_date"/>
+        <result property="classId" column="class_id"/>
+        <result property="courseLocation" column="course_location"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="className" column="class_name"/>
+    </resultMap>
+
+
+    <select id="findCourseSessionIdByLocationAndTime" resultType="Long">
+        SELECT cs.id
+        FROM clock_in.clock_in_classroom_session cs
+        WHERE cs.course_location = #{courseLocation}
+          AND cs.session_date = #{sessionDate}
+          AND #{time} BETWEEN cs.start_time AND cs.end_time
+          AND cs.is_delete = 0
+
+    </select>
+
+    <select id="findCourseSessionIdsByLocationAndTime" resultType="java.lang.Long">
+        SELECT cs.id
+        FROM clock_in.clock_in_classroom_session cs
+        WHERE cs.course_location = #{courseLocation}
+          AND cs.session_date = #{sessionDate}
+          AND #{time} BETWEEN cs.start_time AND cs.end_time
+          AND cs.is_delete = 0
+    </select>
+
+    <!-- 查询课堂信息 -->
+    <select id="findClassIdByLocationAndTime">
+        SELECT class_id
+        FROM clock_in_classroom_session
+        WHERE session_date = #{sessionDate}
+          AND course_location =#{courseLocation}
+          AND #{time} BETWEEN start_time AND end_time
+        AND is_delete = 0
+        LIMIT 1
+    </select>
+
+    <!-- 查询学生姓名 -->
+    <select id="findUserNamesListByClassId" resultType="string">
+        SELECT name
+        FROM clock_in_user
+        WHERE class_id = #{classId}
+          AND is_delete = 0
+    </select>
+
+    <select id="getClassroomSession" resultType="ClassroomAndCourseData">
+        SELECT
+            c.course_name AS courseName,
+            c.teacher_name AS teacherName,
+            cl.class_name AS className,
+            GROUP_CONCAT(u.name SEPARATOR '--') AS studentNames
+        FROM
+            clock_in_classroom_session cs
+                JOIN
+            clock_in_course c ON cs.course_id = c.id
+                JOIN
+            clock_in_class cl ON cs.class_id = cl.id
+                JOIN
+            clock_in_user u ON u.class_id = cs.class_id
+        WHERE
+            cs.id = #{courseId}
+          AND cs.is_delete = 0
+          AND c.is_delete = 0
+          AND cl.is_delete = 0
+          AND u.is_delete = 0
+    </select>
+
+    <select id="getClassroomSessionBySessionIds" resultType="ClassroomAndCourseData">
+        SELECT
+        c.course_name AS courseName,
+        c.teacher_name AS teacherName,
+        GROUP_CONCAT(DISTINCT cl.class_name SEPARATOR ',') AS className,
+        GROUP_CONCAT(u.name SEPARATOR '--') AS studentNames
+        FROM
+        clock_in.clock_in_classroom_session cs
+        JOIN
+        clock_in.clock_in_course c ON cs.course_id = c.id
+        JOIN
+        clock_in.clock_in_class cl ON cs.class_id = cl.id
+        JOIN
+        clock_in.clock_in_user u ON u.class_id = cs.class_id
+        WHERE
+        cs.id IN
+        <foreach collection="sessionIds" item="sessionId" open="(" separator="," close=")">
+            #{sessionId}
+        </foreach>
+        AND cs.is_delete = 0
+        AND c.is_delete = 0
+        AND cl.is_delete = 0
+        AND u.is_delete = 0
+        GROUP BY
+        c.course_name,
+        c.teacher_name;
+    </select>
+
+    <select id="getCourseInfo" resultType="CourseInfo">
+        SELECT
+            cs.course_location AS location,
+            cs.start_time AS startTime
+        FROM
+            clock_in.clock_in_classroom_session cs
+        WHERE
+            cs.id = #{courseId}
+          AND cs.is_delete = 0
+    </select>
+
+    <select id="getAttendanceBySessionId" resultType="java.util.Map">
+        SELECT
+            c.course_name AS courseName,
+            c.teacher_name AS teacherName,
+            cl.class_name AS className,
+            u.name AS studentName,
+            CASE
+                WHEN a.is_present IS NULL OR a.is_present = 0 THEN '未打卡'
+                WHEN a.is_present = 1 THEN '已打卡'
+                WHEN a.is_present = 2 THEN '迟到'
+                WHEN a.is_present = 3 THEN '请假'
+                ELSE 'other'
+                END AS status
+        FROM
+            clock_in.clock_in_classroom_session cs
+                JOIN
+            clock_in.clock_in_course c ON cs.course_id = c.id
+                JOIN
+            clock_in.clock_in_class cl ON cs.class_id = cl.id
+                JOIN
+            clock_in.clock_in_user u ON u.class_id = cs.class_id
+                LEFT JOIN
+            clock_in.clock_in_attendance a ON a.student_id = u.id AND a.classroom_session_id = cs.id
+        WHERE
+            cs.id = #{courseId}
+          AND cs.is_delete = 0
+          AND c.is_delete = 0
+          AND cl.is_delete = 0
+          AND u.is_delete = 0
+    </select>
+
+    <select id="getAttendanceBySessionIds" resultType="java.util.Map">
+        SELECT
+        u.name AS studentName,
+        CASE
+        WHEN a.is_present IS NULL OR a.is_present = 0 THEN '未打卡'
+        WHEN a.is_present = 1 THEN '已打卡'
+        WHEN a.is_present = 2 THEN '迟到'
+        WHEN a.is_present = 3 THEN '请假'
+        ELSE '其他'
+        END AS status
+        FROM
+        clock_in.clock_in_classroom_session cs
+        JOIN
+        clock_in.clock_in_course c ON cs.course_id = c.id
+        JOIN
+        clock_in.clock_in_class cl ON cs.class_id = cl.id
+        JOIN
+        clock_in.clock_in_user u ON u.class_id = cs.class_id
+        LEFT JOIN
+        clock_in.clock_in_attendance a ON a.student_id = u.id
+        AND a.classroom_session_id = cs.id
+        WHERE
+        cs.id IN
+        <foreach collection="sessionIds" item="sessionId" open="(" separator="," close=")">
+            #{sessionId}
+        </foreach>
+        AND cs.is_delete = 0
+        AND c.is_delete = 0
+        AND cl.is_delete = 0
+        AND u.is_delete = 0
+        ORDER BY
+        cs.id, u.id;
+    </select>
+    <select id="getClockInClassroomSession" resultType="java.lang.Long">
+        select id
+        from clock_in_classroom_session
+        where course_id = #{courseId}
+          and course_location = #{courseLocation}
+          and class_id = #{classId}
+          and session_date = #{sessionDate}
+          and start_time = #{startTime}
+          and end_time = #{endTime}
+          and is_delete = 0
+    </select>
+
+    <insert id="insertClockInClassroomSession">
+        INSERT INTO clock_in_classroom_session (course_id,
+                                                course_location,
+                                                class_id,
+                                                session_date,
+                                                start_time, end_time, is_delete, create_time, update_time)
+        VALUES (#{courseId},
+                #{courseLocation},
+                #{classId},
+                #{sessionDate},
+                #{startTime}, #{endTime}, 0, NOW(), NOW())
+
+    </insert>
+    <select id="findSessionIdByClassAndCourse" resultType="java.lang.Long">
+        SELECT
+            cis.id
+        FROM
+            clock_in_classroom_session cis
+                JOIN
+            clock_in_class c ON cis.class_id = c.id
+                JOIN
+            clock_in_course co ON cis.course_id = co.id
+        WHERE
+            c.class_name = #{className}
+          AND co.course_name = #{courseName}
+          AND cis.session_date = #{sessionDate}
+          AND #{time} BETWEEN cis.start_time AND cis.end_time
+          AND cis.is_delete = 0
+          AND c.is_delete = 0
+          AND co.is_delete = 0
+        LIMIT 1
+    </select>
+
+</mapper>
